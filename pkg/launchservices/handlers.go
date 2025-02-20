@@ -17,7 +17,6 @@ func (p *Plist) CleanHandlers() {
 			handler.LSHandlerContentType != "public.xhtml" &&
 			handler.LSHandlerURLScheme != "https" &&
 			handler.LSHandlerURLScheme != "http" {
-			fmt.Printf("Removing handler: %v\n", handler)
 			newLSHandlers = append(newLSHandlers, handler)
 		}
 	}

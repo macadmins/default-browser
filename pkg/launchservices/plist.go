@@ -41,7 +41,7 @@ func GetPlist(path string) (Plist, error) {
 
 func plistExists(path string) (bool, error) {
 	_, err := os.Stat(path)
-if os.IsNotExist(err) {
+	if os.IsNotExist(err) {
 		return false, nil
 	}
 	if err != nil {
@@ -62,7 +62,7 @@ func ReadPlist(path string) (Plist, error) {
 	}
 	defer plistFile.Close()
 
-	err = plist.NewDecoder(plistFile).Decode(&p)
+	err = plist.NewBinaryDecoder(plistFile).Decode(&p)
 	if err != nil {
 		return p, err
 	}
