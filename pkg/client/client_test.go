@@ -12,7 +12,7 @@ func TestNewClient(t *testing.T) {
 	client, err := NewClient()
 	assert.NoError(t, err, "NewClient should not return an error")
 	assert.NotNil(t, client.Runner, "Runner should not be nil")
-	assert.IsType(t, osq.Runner{}, client.Runner, "Runner should be of type osq.Runner")
+	assert.IsType(t, &osq.ExecCmdRunner{}, client.Runner, "Runner should be of type osq.Runner")
 }
 
 func TestNewClientWithCurrentUser(t *testing.T) {
