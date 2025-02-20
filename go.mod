@@ -6,7 +6,7 @@ require (
 	github.com/macadmins/osquery-extension v1.2.3
 	github.com/micromdm/plist v0.2.1
 	github.com/spf13/cobra v1.9.1
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 )
 
 require (
