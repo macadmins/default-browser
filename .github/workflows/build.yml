@@ -26,7 +26,7 @@ jobs:
           p12-file-base64: ${{ secrets.PKG_CERTIFICATES_P12_MAOS }}
           p12-password: ${{ secrets.PKG_CERTIFICATES_P12_PASSWORD_MAOS }}
       - name: Build package
-        run: ./tools/build_pkg.zsh ${{github.run_number}}
+        run: ./tools/build_pkg.zsh ${{github.run_number}} ${{ secrets.NOTARY_APP_PASSWORD_MAOS }}
       - name: Generate changelog
         id: changelog
         uses: metcalfc/changelog-generator@d552ecf3366cf9d6da9fd7dbe425325d3d095aa8 # v4.3.1
