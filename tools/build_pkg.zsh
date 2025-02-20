@@ -9,6 +9,7 @@ set -e
 /bin/mkdir -p build
 /bin/mkdir -p output
 
+XCODE_PATH="/Applications/Xcode_15.4.app"
 APP_SIGNING_IDENTITY="Developer ID Application: Mac Admins Open Source (T4SK8ZXCXG)"
 INSTALLER_SIGNING_IDENTITY="Developer ID Installer: Mac Admins Open Source (T4SK8ZXCXG)"
 XCODE_NOTARY_PATH="$XCODE_PATH/Contents/Developer/usr/bin/notarytool"
