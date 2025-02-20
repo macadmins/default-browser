@@ -29,8 +29,7 @@ jobs:
         run: ./tools/build_pkg.zsh ${{github.run_number}}
       - name: Generate changelog
         id: changelog
-        # uses: metcalfc/changelog-generator@d552ecf3366cf9d6da9fd7dbe425325d3d095aa8 # v4.3.1
-        uses: metcalfc/changelog-generator@v4.3.1
+        uses: metcalfc/changelog-generator@d552ecf3366cf9d6da9fd7dbe425325d3d095aa8 # v4.3.1
         with:
           myToken: ${{ secrets.GITHUB_TOKEN }}
           reverse: 'true'
