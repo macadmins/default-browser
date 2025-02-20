@@ -56,13 +56,12 @@ func ReadPlist(path string) (Plist, error) {
 	if err != nil {
 		return p, err
 	}
-	plistFile, err := os.Open(path)
+	data, err := os.ReadFile(path)
 	if err != nil {
 		return p, err
 	}
-	defer plistFile.Close()
 
-	err = plist.NewBinaryDecoder(plistFile).Decode(&p)
+	err = plist.Unmarshal(data, &p)
 	if err != nil {
 		return p, err
 	}
