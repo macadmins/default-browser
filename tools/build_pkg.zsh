@@ -31,4 +31,4 @@ GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.version=${VERSION}" -o build
 sudo /usr/bin/codesign --timestamp --force --deep -s "${APP_SIGNING_IDENTITY}" payload/opt/macadmins/bin/default-browser
 
 # create the package
-/usr/bin/pkgbuild --root payload --identifier com.github.macadmins.default-browser --version ${VERSION} --install-location / --scripts scripts --ownership recommended --sign "${INSTALLER_SIGNING_IDENTITY}" output/default-browser.pkg
+/usr/bin/pkgbuild --root payload --identifier com.github.macadmins.default-browser --version ${VERSION} --install-location / --ownership recommended --sign "${INSTALLER_SIGNING_IDENTITY}" output/default-browser.pkg
