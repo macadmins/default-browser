@@ -4,7 +4,7 @@ jobs:
   build:
     runs-on: macos-14
     env:
-      VERSION: 1.0.${{github.run_number}}
+      VERSION: 1.0.${{ github.run_number }}
     steps:
       - name: Checkout code
         uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # v3.4.0
@@ -28,7 +28,7 @@ jobs:
           p12-file-base64: ${{ secrets.PKG_CERTIFICATES_P12_MAOS }}
           p12-password: ${{ secrets.PKG_CERTIFICATES_P12_PASSWORD_MAOS }}
       - name: Build package
-        run: ./tools/build_pkg.zsh $VERSION ${{ secrets.NOTARY_APP_PASSWORD_MAOS }}
+        run: ./tools/build_pkg.zsh ${{ env.VERSION }} ${{ secrets.NOTARY_APP_PASSWORD_MAOS }}
       - name: Generate changelog
         id: changelog
         uses: metcalfc/changelog-generator@d552ecf3366cf9d6da9fd7dbe425325d3d095aa8 # v4.3.1
@@ -39,8 +39,8 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v0.1.15
         with:
-          name: v$VERSION
-          tag_name: v$VERSION
+          name: v${{ env.VERSION }}
+          tag_name: v${{ env.VERSION }}
           draft: false
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}
