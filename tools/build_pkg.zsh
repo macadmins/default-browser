@@ -11,6 +11,8 @@ set -e
 
 APP_SIGNING_IDENTITY="Developer ID Application: Mac Admins Open Source (T4SK8ZXCXG)"
 INSTALLER_SIGNING_IDENTITY="Developer ID Installer: Mac Admins Open Source (T4SK8ZXCXG)"
+XCODE_NOTARY_PATH="$XCODE_PATH/Contents/Developer/usr/bin/notarytool"
+XCODE_STAPLER_PATH="$XCODE_PATH/Contents/Developer/usr/bin/stapler"
 
 # read the version from passed argument
 VERSION=$1
@@ -38,3 +40,11 @@ sudo /usr/bin/codesign --timestamp --force --deep -s "${APP_SIGNING_IDENTITY}" p
 # create the package
 echo "Creating the package"
 /usr/bin/pkgbuild --root payload --identifier com.github.macadmins.default-browser --version ${VERSION} --install-location / --ownership recommended --sign "${INSTALLER_SIGNING_IDENTITY}" output/default-browser.pkg
+
+# notarize the package
+echo "Notarizing the package"
+$XCODE_NOTARY_PATH store-credentials --apple-id "opensource@macadmins.io" --team-id "T4SK8ZXCXG" --password "$2" defaultbrowser
+
+# Notarize default-browser package
+$XCODE_NOTARY_PATH submit "output/default-browser.pkg" --keychain-profile "defaultbrowser" --wait
+$XCODE_STAPLER_PATH staple "output/default-browser.pkg"
