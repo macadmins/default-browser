@@ -18,6 +18,27 @@ XCODE_STAPLER_PATH="$XCODE_PATH/Contents/Developer/usr/bin/stapler"
 # read the version from passed argument
 VERSION=$1
 
+# ensure xcode is installed
+if [ ! -d "$XCODE_PATH" ]; then
+  echo "Xcode not found at $XCODE_PATH"
+  exit 1
+fi
+
+# ensure the notary tool is installed
+if [ ! -f "$XCODE_NOTARY_PATH" ]; then
+  echo "Notary tool not found at $XCODE_NOTARY_PATH"
+  exit 1
+fi
+
+# ensure the stapler tool is installed
+if [ ! -f "$XCODE_STAPLER_PATH" ]; then
+  echo "Stapler tool not found at $XCODE_STAPLER_PATH"
+  exit 1
+fi
+
+# Ensure Xcode is set to run-time
+sudo xcode-select -s "$XCODE_PATH"
+
 echo "Building version ${VERSION}"
 
 # build arm64
@@ -43,7 +64,7 @@ echo "Creating the package"
 /usr/bin/pkgbuild --root payload --identifier com.github.macadmins.default-browser --version ${VERSION} --install-location / --ownership recommended --sign "${INSTALLER_SIGNING_IDENTITY}" output/default-browser.pkg
 
 # notarize the package
-echo "Notarizing the package"
+echo "Notarizing the package with ${XCODE_NOTARY_PATH}"
 $XCODE_NOTARY_PATH store-credentials --apple-id "opensource@macadmins.io" --team-id "T4SK8ZXCXG" --password "$2" defaultbrowser
 
 # Notarize default-browser package
