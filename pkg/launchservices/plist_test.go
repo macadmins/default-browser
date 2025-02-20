@@ -5,8 +5,13 @@ import (
 	"path/filepath"
 	"testing"
 
+	_ "embed"
+
 	"github.com/stretchr/testify/assert"
 )
+
+//go:embed binary_data.plist
+var binaryplist []byte
 
 func TestReadPlist(t *testing.T) {
 	// Create a temporary file with fake plist data
@@ -14,24 +19,7 @@ func TestReadPlist(t *testing.T) {
 	assert.NoError(t, err, "TempFile should not return an error")
 	defer os.Remove(tmpfile.Name())
 
-	fakePlistData := `
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>LSHandlers</key>
-    <array>
-        <dict>
-            <key>LSHandlerContentType</key>
-            <string>public.html</string>
-            <key>LSHandlerRoleAll</key>
-            <string>com.apple.safari</string>
-        </dict>
-    </array>
-</dict>
-</plist>
-`
-	_, err = tmpfile.Write([]byte(fakePlistData))
+	_, err = tmpfile.Write([]byte(binaryplist))
 	assert.NoError(t, err, "Write should not return an error")
 	err = tmpfile.Close()
 	assert.NoError(t, err, "Close should not return an error")
