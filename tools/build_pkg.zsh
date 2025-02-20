@@ -12,8 +12,8 @@ set -e
 APP_SIGNING_IDENTITY="Developer ID Application: Mac Admins Open Source (T4SK8ZXCXG)"
 INSTALLER_SIGNING_IDENTITY="Developer ID Installer: Mac Admins Open Source (T4SK8ZXCXG)"
 
-# read the version from the VERSION file
-VERSION=$(cat VERSION)
+# read the version from passed argument
+VERSION=$1
 
 # build arm64
 GOOS=darwin GOARCH=arm64 go build -ldflags "-X main.version=${VERSION}" -o build/default-browser-arm64
