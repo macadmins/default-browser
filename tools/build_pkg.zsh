@@ -57,7 +57,7 @@ echo "Copying the binary to the payload"
 
 # sign the binary
 echo "Signing the binary"
-sudo /usr/bin/codesign --timestamp --force --deep -s "${APP_SIGNING_IDENTITY}" --options=runtime --entitlements ./default-browser.entitlement payload/opt/macadmins/bin/default-browser
+sudo /usr/bin/codesign --timestamp --force --deep -s "${APP_SIGNING_IDENTITY}" --options=runtime --entitlements ./tools/default-browser.entitlement payload/opt/macadmins/bin/default-browser
 
 # create the package
 echo "Creating the package"
