@@ -29,9 +29,11 @@ jobs:
         run: ./tools/build_pkg.zsh ${{github.run_number}}
       - name: Generate changelog
         id: changelog
-        uses: janheinrichmerker/action-github-changelog-generator@e60b5a2bd9fcd88dadf6345ff8327863fb8b490f # v2.4
+        # uses: metcalfc/changelog-generator@d552ecf3366cf9d6da9fd7dbe425325d3d095aa8 # v4.3.1
+        uses: metcalfc/changelog-generator@v4.3.1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          myToken: ${{ secrets.GITHUB_TOKEN }}
+          reverse: 'true'
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v0.1.15
