@@ -40,6 +40,11 @@ func setDefault(identifier string, noRebuildLaunchServices bool) error {
 		return fmt.Errorf("identifier cannot be empty")
 	}
 
+	// Todo: actually run as the logged in user if run as root. For now just bail
+	if os.Geteuid() == 0 {
+		return fmt.Errorf("this tool must be run as the logged in user")
+	}
+
 	c, err := client.NewClient()
 	if err != nil {
 		return err

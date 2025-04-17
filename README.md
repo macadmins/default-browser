@@ -14,3 +14,11 @@ To set other browsers as the default, use the following identifiers:
 - Safari: `com.apple.safari`
 - Firefox: `org.mozilla.firefox`
 - MS Edge: `com.microsoft.edgemac`
+
+## Known issues
+
+### System Settings may not work correctly
+
+If System Settings doesn't show all sections correctly after running, this tool, restart the machine. This is likely a timing issue with Launch Services, but we haven't reproduced it consistently. A restart fixes the issue 100% of the time.
+
+![System Settings screenshot](assets/system_settings.png)
