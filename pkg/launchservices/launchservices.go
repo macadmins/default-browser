@@ -9,7 +9,7 @@ import (
 
 const lsregister = "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister"
 
-func ModifyLS(c client.Client, identifier string) error {
+func ModifyLS(c client.Client, identifier string, noRebuildLaunchServices bool) error {
 	plist, err := GetPlist(c.PlistLocation)
 	if err != nil {
 		return err
@@ -39,7 +39,8 @@ func ModifyLS(c client.Client, identifier string) error {
 		fmt.Printf("lsregister does not exist at %s. You should restart the device to rebuild launchservices", lsregister)
 		return nil
 	}
-	err = rebuildLaunchServices(c)
+
+	err = rebuildLaunchServices(c, noRebuildLaunchServices)
 	if err != nil {
 		return err
 	}
@@ -52,10 +53,12 @@ func ModifyLS(c client.Client, identifier string) error {
 	return nil
 }
 
-func rebuildLaunchServices(c client.Client) error {
-	_, err := c.Runner.RunCmd(lsregister, "-kill", "-r", "-domain", "local", "-domain", "system", "-domain", "user")
-	if err != nil {
-		return err
+func rebuildLaunchServices(c client.Client, noRebuildLaunchServices bool) error {
+	if !noRebuildLaunchServices {
+		_, err := c.Runner.RunCmd(lsregister, "-kill", "-r", "-domain", "local", "-domain", "system", "-domain", "user")
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
