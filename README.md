@@ -19,6 +19,6 @@ To set other browsers as the default, use the following identifiers:
 
 ### System Settings may not work correctly
 
-If System Settings doesn't show all sections correctly after running, this tool, restart the machine. This is likely a timing issue with Launch Services, but we haven't reproduced it consistently. A restart fixes the issue 100% of the time.
+If System Settings doesn't show all sections correctly after running, this tool, restart the machine. This is likely a timing issue with Launch Services, but we haven't reproduced it consistently. If you see that a restart doesn't fix the issue, you way wish to use the `---no-rebuild-launchservices` flag. This will mean that you need to reboot after running the tool.
 
 ![System Settings screenshot](assets/system_settings.png)
