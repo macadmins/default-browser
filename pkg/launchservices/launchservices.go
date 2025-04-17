@@ -39,12 +39,10 @@ func ModifyLS(c client.Client, identifier string, noRebuildLaunchServices bool) 
 		fmt.Printf("lsregister does not exist at %s. You should restart the device to rebuild launchservices", lsregister)
 		return nil
 	}
-	if !noRebuildLaunchServices {
-		fmt.Println("Rebuilding Launch Services...")
-		err = rebuildLaunchServices(c)
-		if err != nil {
-			return err
-		}
+
+	err = rebuildLaunchServices(c, noRebuildLaunchServices)
+	if err != nil {
+		return err
 	}
 
 	err = killlsd(c)
@@ -55,10 +53,12 @@ func ModifyLS(c client.Client, identifier string, noRebuildLaunchServices bool) 
 	return nil
 }
 
-func rebuildLaunchServices(c client.Client) error {
-	_, err := c.Runner.RunCmd(lsregister, "-kill", "-r", "-domain", "local", "-domain", "system", "-domain", "user")
-	if err != nil {
-		return err
+func rebuildLaunchServices(c client.Client, noRebuildLaunchServices bool) error {
+	if !noRebuildLaunchServices {
+		_, err := c.Runner.RunCmd(lsregister, "-kill", "-r", "-domain", "local", "-domain", "system", "-domain", "user")
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

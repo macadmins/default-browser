@@ -19,8 +19,11 @@ func TestRebuildLaunchServices(t *testing.T) {
 		Runner: mockRunner,
 	}
 
-	err := rebuildLaunchServices(mockClient)
+	err := rebuildLaunchServices(mockClient, false)
 	assert.NoError(t, err, "rebuildLaunchServices should not return an error")
+
+	err = rebuildLaunchServices(mockClient, true)
+	assert.NoError(t, err, "rebuildLaunchServices should not return an error when noRebuildLaunchServices is true")
 }
 
 func TestKilllsd(t *testing.T) {
