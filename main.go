@@ -24,8 +24,8 @@ func main() {
 	}
 
 	rootCmd.Flags().StringVar(&identifier, "identifier", "com.google.chrome", "An identifier for the application")
-	rootCmd.Flags().BoolVar(&noRescanLaunchServices, "no-rebuild-launchservices", false, "Do not rescan launch services. Only use if you are experiencing issues with System Settings not displaying correctly after a reboot.")
-	rootCmd.Flags().BoolVar(&noRescanLaunchServices, "no-rescan-launchservices", false, "Legacy: same as --no-rebuild-launchservices")
+	rootCmd.Flags().BoolVar(&noRescanLaunchServices, "no-rescan-launchservices", false, "Do not rescan launch services. Only use if you are experiencing issues with System Settings not displaying correctly after a reboot.")
+	rootCmd.Flags().BoolVar(&noRescanLaunchServices, "no-rebuild-launchservices", false, "Legacy: same as --no-rescan-launchservices")
 
 	rootCmd.Version = version
 	rootCmd.SetVersionTemplate("default-browser version {{.Version}}\n")
