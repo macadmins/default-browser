@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRebuildLaunchServices(t *testing.T) {
+func TestRescanLaunchServices(t *testing.T) {
 	mockRunner := utils.MockCmdRunner{
 		Output: "",
 		Err:    nil,
@@ -19,11 +19,11 @@ func TestRebuildLaunchServices(t *testing.T) {
 		Runner: mockRunner,
 	}
 
-	err := rebuildLaunchServices(mockClient, false)
-	assert.NoError(t, err, "rebuildLaunchServices should not return an error")
+	err := rescanLaunchServices(mockClient, false)
+	assert.NoError(t, err, "rescanLaunchServices should not return an error")
 
-	err = rebuildLaunchServices(mockClient, true)
-	assert.NoError(t, err, "rebuildLaunchServices should not return an error when noRebuildLaunchServices is true")
+	err = rescanLaunchServices(mockClient, true)
+	assert.NoError(t, err, "rescanLaunchServices should not return an error when noRebuildLaunchServices is true")
 }
 
 func TestKilllsd(t *testing.T) {

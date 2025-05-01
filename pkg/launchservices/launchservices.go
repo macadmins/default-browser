@@ -9,7 +9,7 @@ import (
 
 const lsregister = "/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"
 
-func ModifyLS(c client.Client, identifier string, noRebuildLaunchServices bool) error {
+func ModifyLS(c client.Client, identifier string, noRescanLaunchServices bool) error {
 	plist, err := GetPlist(c.PlistLocation)
 	if err != nil {
 		return err
@@ -40,7 +40,7 @@ func ModifyLS(c client.Client, identifier string, noRebuildLaunchServices bool) 
 		return nil
 	}
 
-	err = rebuildLaunchServices(c, noRebuildLaunchServices)
+	err = rescanLaunchServices(c, noRescanLaunchServices)
 	if err != nil {
 		return err
 	}
@@ -53,8 +53,8 @@ func ModifyLS(c client.Client, identifier string, noRebuildLaunchServices bool) 
 	return nil
 }
 
-func rebuildLaunchServices(c client.Client, noRebuildLaunchServices bool) error {
-	if !noRebuildLaunchServices {
+func rescanLaunchServices(c client.Client, noRescanLaunchServices bool) error {
+	if !noRescanLaunchServices {
 		_, err := c.Runner.RunCmd(lsregister, "-gc", "-R", "-all", "user,system,local,network")
 		if err != nil {
 			return err
