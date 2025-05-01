@@ -7,7 +7,7 @@ import (
 	"github.com/macadmins/default-browser/pkg/client"
 )
 
-const lsregister = "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister"
+const lsregister = "/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"
 
 func ModifyLS(c client.Client, identifier string, noRebuildLaunchServices bool) error {
 	plist, err := GetPlist(c.PlistLocation)
@@ -55,7 +55,7 @@ func ModifyLS(c client.Client, identifier string, noRebuildLaunchServices bool) 
 
 func rebuildLaunchServices(c client.Client, noRebuildLaunchServices bool) error {
 	if !noRebuildLaunchServices {
-		_, err := c.Runner.RunCmd(lsregister, "-kill", "-r", "-domain", "local", "-domain", "system", "-domain", "user")
+		_, err := c.Runner.RunCmd(lsregister, "-gc", "-R", "-all", "user,system,local,network")
 		if err != nil {
 			return err
 		}
