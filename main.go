@@ -13,18 +13,19 @@ var version string
 
 func main() {
 	var identifier string
-	var noRebuildLaunchServices bool
+	var noRescanLaunchServices bool
 
 	var rootCmd = &cobra.Command{
 		Use:   "default-browser",
 		Short: "A cli tool to set the default browser on macOS",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return setDefault(identifier, noRebuildLaunchServices)
+			return setDefault(identifier, noRescanLaunchServices)
 		},
 	}
 
 	rootCmd.Flags().StringVar(&identifier, "identifier", "com.google.chrome", "An identifier for the application")
-	rootCmd.Flags().BoolVar(&noRebuildLaunchServices, "no-rebuild-launchservices", false, "Do not rebuild launch services. Only use if you are experiencing issues with System Settings not displaying correctly after a reboot.")
+	rootCmd.Flags().BoolVar(&noRescanLaunchServices, "no-rescan-launchservices", false, "Do not rescan launch services. Only use if you are experiencing issues with System Settings not displaying correctly after a reboot.")
+	rootCmd.Flags().BoolVar(&noRescanLaunchServices, "no-rebuild-launchservices", false, "Legacy: same as --no-rescan-launchservices")
 
 	rootCmd.Version = version
 	rootCmd.SetVersionTemplate("default-browser version {{.Version}}\n")
@@ -35,7 +36,7 @@ func main() {
 	}
 }
 
-func setDefault(identifier string, noRebuildLaunchServices bool) error {
+func setDefault(identifier string, noRescanLaunchServices bool) error {
 	if identifier == "" {
 		return fmt.Errorf("identifier cannot be empty")
 	}
@@ -50,7 +51,7 @@ func setDefault(identifier string, noRebuildLaunchServices bool) error {
 		return err
 	}
 
-	err = launchservices.ModifyLS(c, identifier, noRebuildLaunchServices)
+	err = launchservices.ModifyLS(c, identifier, noRescanLaunchServices)
 	if err != nil {
 		return err
 	}
