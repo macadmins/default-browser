@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/user"
+	"path/filepath"
 	"strconv"
 )
 
@@ -11,6 +12,10 @@ type UserInfo struct {
 	Username string
 	UID      int
 	HomeDir  string
+}
+
+func (u *UserInfo) LaunchServicesPlistPath() string {
+	return filepath.Join(u.HomeDir, "Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist")
 }
 
 func LookupUserInfo(username string) (*UserInfo, error) {

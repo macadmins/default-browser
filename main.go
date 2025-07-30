@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 
 	"github.com/macadmins/default-browser/pkg/client"
 	"github.com/macadmins/default-browser/pkg/launchservices"
@@ -52,7 +51,7 @@ func setDefault(identifier string, noRescanLaunchServices bool, targetUser strin
 			return err
 		}
 
-		plistPath = filepath.Join(userInfo.HomeDir, "Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist")
+		plistPath = userInfo.LaunchServicesPlistPath()
 		opts = append(opts, client.WithCurrentUser(userInfo.Username), client.WithPlistLocation(plistPath))
 	} else {
 		if targetUser != "" {

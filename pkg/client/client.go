@@ -2,7 +2,6 @@ package client
 
 import (
 	"os/user"
-	"path/filepath"
 
 	osq "github.com/macadmins/osquery-extension/pkg/utils"
 )
@@ -47,7 +46,7 @@ func NewClient(opts ...Option) (Client, error) {
 		if err != nil {
 			return c, err
 		}
-		c.PlistLocation = filepath.Join(userInfo.HomeDir, "Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist")
+		c.PlistLocation = userInfo.LaunchServicesPlistPath()
 	}
 
 	return c, nil

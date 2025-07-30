@@ -22,8 +22,19 @@ func TestLookupUserInfo(t *testing.T) {
 	assert.Greater(t, info.UID, 0, "UID should be greater than 0")
 }
 
+func TestLaunchServicesPlistPath(t *testing.T) {
+	userInfo := &client.UserInfo{
+		Username: "fakeuser",
+		UID:      501,
+		HomeDir:  "/Users/fakeuser",
+	}
+
+	expected := "/Users/fakeuser/Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist"
+	assert.Equal(t, expected, userInfo.LaunchServicesPlistPath(), "LaunchServicesPlistPath should construct the correct path")
+}
+
 func TestLookupUserInfo_InvalidUser(t *testing.T) {
-	_, err := client.LookupUserInfo("not-a-real-user")
+	_, err := client.LookupUserInfo("fakeuser")
 	assert.Error(t, err, "LookupUserInfo should return an error for a non-existent user")
 }
 
