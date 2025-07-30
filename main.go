@@ -25,12 +25,11 @@ func main() {
 		},
 	}
 
-	rootCmd.Flags().StringVar(&identifier, "identifier", "", "An identifier for the application")
+	rootCmd.Flags().StringVar(&identifier, "identifier", "com.google.chrome", "An identifier for the application")
 	rootCmd.Flags().BoolVar(&noRescanLaunchServices, "no-rescan-launchservices", false, "Do not rescan launch services.")
 	rootCmd.Flags().BoolVar(&noRescanLaunchServices, "no-rebuild-launchservices", false, "Legacy: same as --no-rescan-launchservices")
 	rootCmd.Flags().StringVar(&targetUser, "user", "", "Username to operate on (only allowed when run as root)")
 
-	rootCmd.MarkFlagRequired("identifier")
 	rootCmd.Version = version
 	rootCmd.SetVersionTemplate("default-browser version {{.Version}}\n")
 
