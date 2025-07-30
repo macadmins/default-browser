@@ -18,7 +18,7 @@ To set other browsers as the default, use the following identifiers:
 To set the default browser for another user, run within a root context and specify `--user`. The user account must exist.
 
 ```shell
-/opt/macadmins/bin/default-browser --identifier com.google.chrome --user tim.apple
+sudo /opt/macadmins/bin/default-browser --identifier com.google.chrome --user tim.apple
 ```
 
 ## Known issues
