@@ -3,9 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
-	"os/user"
 	"path/filepath"
-	"strconv"
 
 	"github.com/macadmins/default-browser/pkg/client"
 	"github.com/macadmins/default-browser/pkg/launchservices"
@@ -21,7 +19,7 @@ func main() {
 
 	var rootCmd = &cobra.Command{
 		Use:   "default-browser",
-		Short: "A cli tool to set the default browser on macOS",
+		Short: "A CLI tool to set the default browser on macOS",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return setDefault(identifier, noRescanLaunchServices, targetUser)
 		},
@@ -43,20 +41,20 @@ func main() {
 
 func setDefault(identifier string, noRescanLaunchServices bool, targetUser string) error {
 	var opts []client.Option
+	var plistPath string
 
 	if os.Geteuid() == 0 {
 		if targetUser == "" {
 			return fmt.Errorf("--user must be specified when running as root")
 		}
-	
-		// Look up the specified user and construct the correct plist path
-		u, err := user.Lookup(targetUser)
+
+		userInfo, err := client.LookupUserInfo(targetUser)
 		if err != nil {
-			return fmt.Errorf("unknown user %s", targetUser)
+			return err
 		}
 
-		plistPath := filepath.Join(u.HomeDir, "Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist")
-		opts = append(opts, client.WithCurrentUser(targetUser), client.WithPlistLocation(plistPath))
+		plistPath = filepath.Join(userInfo.HomeDir, "Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist")
+		opts = append(opts, client.WithCurrentUser(userInfo.Username), client.WithPlistLocation(plistPath))
 	} else {
 		if targetUser != "" {
 			return fmt.Errorf("--user can only be used when running as root")
@@ -68,31 +66,15 @@ func setDefault(identifier string, noRescanLaunchServices bool, targetUser strin
 		return err
 	}
 
-	err = launchservices.ModifyLS(c, identifier, noRescanLaunchServices)
-	if err != nil {
+	if err := launchservices.ModifyLS(c, identifier, noRescanLaunchServices); err != nil {
 		return err
 	}
 
-	// Fix ownership if specifying --user
 	if os.Geteuid() == 0 {
-		uid, err := parseUID(u)
-		if err != nil {
+		if err := client.FixPlistOwnership(targetUser, c.PlistLocation); err != nil {
 			return err
-		}
-
-		err = os.Chown(c.PlistLocation, uid, 20) // gid 20 = staff
-		if err != nil {
-			return fmt.Errorf("failed to chown plist: %v", err)
 		}
 	}
 
 	return nil
-}
-
-func parseUID(u *user.User) (int, error) {
-	uid, err := strconv.Atoi(u.Uid)
-	if err != nil {
-		return 0, fmt.Errorf("invalid UID for user %s: %v", u.Username, err)
-	}
-	return uid, nil
 }
