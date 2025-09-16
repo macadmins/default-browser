@@ -42,7 +42,11 @@ func NewClient(opts ...Option) (Client, error) {
 	}
 
 	if c.PlistLocation == "" {
-		c.PlistLocation = "/Users/" + c.CurrentUser + "/Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist"
+		userInfo, err := LookupUserInfo(c.CurrentUser)
+		if err != nil {
+			return c, err
+		}
+		c.PlistLocation = userInfo.LaunchServicesPlistPath()
 	}
 
 	return c, nil
