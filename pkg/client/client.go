@@ -6,6 +6,8 @@ import (
 	osq "github.com/macadmins/osquery-extension/pkg/utils"
 )
 
+const launchServicesPlistPath = "Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist"
+
 type Client struct {
 	Runner        osq.CmdRunner
 	CurrentUser   string
@@ -13,6 +15,7 @@ type Client struct {
 }
 
 type Option func(*Client)
+type currentUserLookup func() (*user.User, error)
 
 func WithCurrentUser(currentUser string) Option {
 	return func(c *Client) {
@@ -27,6 +30,10 @@ func WithPlistLocation(plistLocation string) Option {
 }
 
 func NewClient(opts ...Option) (Client, error) {
+	return newClient(user.Current, opts...)
+}
+
+func newClient(lookupCurrentUser currentUserLookup, opts ...Option) (Client, error) {
 	c := Client{}
 	c.Runner = osq.NewRunner().Runner
 	for _, opt := range opts {
@@ -34,7 +41,7 @@ func NewClient(opts ...Option) (Client, error) {
 	}
 
 	if c.CurrentUser == "" {
-		currentUser, err := user.Current()
+		currentUser, err := lookupCurrentUser()
 		if err != nil {
 			return c, err
 		}
@@ -42,8 +49,12 @@ func NewClient(opts ...Option) (Client, error) {
 	}
 
 	if c.PlistLocation == "" {
-		c.PlistLocation = "/Users/" + c.CurrentUser + "/Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist"
+		c.PlistLocation = defaultLaunchServicesPlistLocation(c.CurrentUser)
 	}
 
 	return c, nil
+}
+
+func defaultLaunchServicesPlistLocation(currentUser string) string {
+	return "/Users/" + currentUser + "/" + launchServicesPlistPath
 }
