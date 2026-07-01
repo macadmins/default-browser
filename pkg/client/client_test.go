@@ -1,6 +1,7 @@
 package client
 
 import (
+	"errors"
 	"os/user"
 	"testing"
 
@@ -20,15 +21,16 @@ func TestNewClientWithCurrentUser(t *testing.T) {
 	client, err := NewClient(WithCurrentUser(expectedUser))
 	assert.NoError(t, err, "NewClient should not return an error")
 	assert.Equal(t, expectedUser, client.CurrentUser, "CurrentUser should be set to the provided value")
+	assert.Equal(t, "/Users/testuser/Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist", client.PlistLocation, "PlistLocation should use the provided current user")
 }
 
 func TestNewClientDefaultCurrentUser(t *testing.T) {
-	currentUser, err := user.Current()
-	assert.NoError(t, err, "user.Current should not return an error")
-
-	client, err := NewClient()
+	client, err := newClient(func() (*user.User, error) {
+		return &user.User{Username: "systemuser"}, nil
+	})
 	assert.NoError(t, err, "NewClient should not return an error")
-	assert.Equal(t, currentUser.Username, client.CurrentUser, "CurrentUser should be set to the system's current user")
+	assert.Equal(t, "systemuser", client.CurrentUser, "CurrentUser should be set to the system's current user")
+	assert.Equal(t, "/Users/systemuser/Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist", client.PlistLocation, "PlistLocation should use the system's current user")
 }
 
 func TestNewClientWithPlistLocation(t *testing.T) {
@@ -36,4 +38,31 @@ func TestNewClientWithPlistLocation(t *testing.T) {
 	client, err := NewClient(WithPlistLocation(expectedPlistLocation))
 	assert.NoError(t, err, "NewClient should not return an error")
 	assert.Equal(t, expectedPlistLocation, client.PlistLocation, "PlistLocation should be set to the provided value")
+}
+
+func TestNewClientWithCurrentUserSkipsCurrentUserLookup(t *testing.T) {
+	client, err := newClient(func() (*user.User, error) {
+		return nil, errors.New("current user lookup should not be called")
+	}, WithCurrentUser("testuser"))
+
+	assert.NoError(t, err, "NewClient should not return an error")
+	assert.Equal(t, "testuser", client.CurrentUser, "CurrentUser should be set to the provided value")
+	assert.Equal(t, "/Users/testuser/Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist", client.PlistLocation, "PlistLocation should use the provided current user")
+}
+
+func TestNewClientReturnsCurrentUserLookupError(t *testing.T) {
+	expectedErr := errors.New("current user lookup failed")
+
+	client, err := newClient(func() (*user.User, error) {
+		return nil, expectedErr
+	})
+
+	assert.ErrorIs(t, err, expectedErr, "NewClient should return the current user lookup error")
+	assert.Empty(t, client.CurrentUser, "CurrentUser should not be set when lookup fails")
+}
+
+func TestDefaultLaunchServicesPlistLocation(t *testing.T) {
+	location := defaultLaunchServicesPlistLocation("testuser")
+
+	assert.Equal(t, "/Users/testuser/Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist", location, "default LaunchServices plist location should match the legacy path")
 }
