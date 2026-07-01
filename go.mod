@@ -4,7 +4,7 @@ go 1.22.1
 
 require (
 	github.com/macadmins/osquery-extension v1.2.3
-	github.com/micromdm/plist v0.2.1
+	github.com/micromdm/plist v0.2.2
 	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.11.1
 )
