@@ -1,6 +1,6 @@
 module github.com/macadmins/default-browser
 
-go 1.24.0
+go 1.25
 
 require (
 	github.com/macadmins/osquery-extension v1.4.1
@@ -11,7 +11,7 @@ require (
 
 require (
 	github.com/Microsoft/go-winio v0.6.2 // indirect
-	github.com/apache/thrift v0.22.0 // indirect
+	github.com/apache/thrift v0.23.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-logr/logr v1.4.3 // indirect
