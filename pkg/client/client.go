@@ -11,6 +11,7 @@ const launchServicesPlistPath = "Library/Preferences/com.apple.LaunchServices/co
 type Client struct {
 	Runner        osq.CmdRunner
 	CurrentUser   string
+	HomeDir       string
 	PlistLocation string
 }
 
@@ -20,6 +21,12 @@ type currentUserLookup func() (*user.User, error)
 func WithCurrentUser(currentUser string) Option {
 	return func(c *Client) {
 		c.CurrentUser = currentUser
+	}
+}
+
+func WithHomeDir(homeDir string) Option {
+	return func(c *Client) {
+		c.HomeDir = homeDir
 	}
 }
 
@@ -40,21 +47,26 @@ func newClient(lookupCurrentUser currentUserLookup, opts ...Option) (Client, err
 		opt(&c)
 	}
 
-	if c.CurrentUser == "" {
+	if c.CurrentUser == "" || c.HomeDir == "" {
 		currentUser, err := lookupCurrentUser()
 		if err != nil {
 			return c, err
 		}
-		c.CurrentUser = currentUser.Username
+		if c.CurrentUser == "" {
+			c.CurrentUser = currentUser.Username
+		}
+		if c.HomeDir == "" {
+			c.HomeDir = currentUser.HomeDir
+		}
 	}
 
 	if c.PlistLocation == "" {
-		c.PlistLocation = defaultLaunchServicesPlistLocation(c.CurrentUser)
+		c.PlistLocation = defaultLaunchServicesPlistLocation(c.HomeDir)
 	}
 
 	return c, nil
 }
 
-func defaultLaunchServicesPlistLocation(currentUser string) string {
-	return "/Users/" + currentUser + "/" + launchServicesPlistPath
+func defaultLaunchServicesPlistLocation(homeDir string) string {
+	return homeDir + "/" + launchServicesPlistPath
 }
