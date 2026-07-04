@@ -4,16 +4,16 @@ jobs:
   build:
     runs-on: macos-14
     env:
-      VERSION: 1.0.${{ github.run_number }}
+      VERSION: 1.1.${{ github.run_number }}
     steps:
       - name: Checkout code
         uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # v3.4.0
         with:
           fetch-depth: 0
       - name: Set up Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v6
         with:
-          go-version: '1.21'
+          go-version-file: go.mod
       - name: Install Apple Xcode certificates
         uses: apple-actions/import-codesign-certs@8f3fb608891dd2244cdab3d69cd68c0d37a7fe93 # v2.0.0
         with:
